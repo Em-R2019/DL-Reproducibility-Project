@@ -8,17 +8,17 @@ train:
     decay_step:
       - 8
   save:
-    save_path: "path/to/save/the/model"
+    save_path: "model"
     model_name: "AFF-Net"
     step: 1
   data:
-    path: "path/of/the/GazeCapture/dataset"
+    path: "data\\MPIIFaceGaze"
 test:
    load:
       begin_step: 1
       end_step: 12
       steps: 1
       model_name: "AFF-Net"
-      load_path: "path/to/save/the/model"
+      load_path: "model"
    data:
-      path: "path/of/the/GazeCapture/dataset"
+      path: "data\\MPIIFaceGaze"

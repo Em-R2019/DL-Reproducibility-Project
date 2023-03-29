@@ -14,7 +14,7 @@ import time
 
 if __name__ == "__main__":
     #os.environ["CUDA_VISIBLE_DEVICES"] = '0,1'
-    config = yaml.load(open("config.yaml"))
+    config = yaml.safe_load(open("config.yaml"))
     config = config["train"]
     path = config["data"]["path"]
     model_name = config["save"]["model_name"]
