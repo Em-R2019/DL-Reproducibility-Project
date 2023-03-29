@@ -3,15 +3,15 @@ import scipy.io as sio
 import cv2 
 import os
 import sys
-import gtools
+# import gtools
 from easydict import EasyDict as edict
 sys.path.append("../core/")
 import data_processing_core as dpc
 # import im_plot as ipt
 
-root = "Data/MPIIFaceGaze"
-sample_root = "Data/MPIIGaze/Evaluation Subset/sample list for eye image"
-out_root = "Data/output"
+root = "data/MPIIFaceGaze"
+sample_root = "data/MPIIGaze/Evaluation Subset/sample list for eye image"
+out_root = "data/output"
 
 def ImageProcessing_MPII():
     persons = os.listdir(sample_root)
