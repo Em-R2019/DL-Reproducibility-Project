@@ -46,7 +46,7 @@ if __name__ == "__main__":
     decay_steps = config["params"]["decay_step"]
     optimizer = torch.optim.Adam(net.parameters(), base_lr,
                                 weight_decay=0.0005)
-    print("Traning")
+    print("Training")
     length = len(dataset)
     cur_decay_index = 0
     with open(os.path.join(save_path, "train_log"), 'w') as outfile:
