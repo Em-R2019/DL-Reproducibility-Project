@@ -11,7 +11,7 @@ import data_processing_core as dpc
 
 root = "data/MPIIFaceGaze"
 sample_root = "data/MPIIGaze/Evaluation Subset/sample list for eye image"
-out_root = "data/output"
+out_root = "data/output2D"
 
 def ImageProcessing_MPII():
     persons = os.listdir(sample_root)

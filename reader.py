@@ -90,7 +90,7 @@ class loader(Dataset):
                     # label = np.array(label).astype('float')
 
                     rects = [rightEyeCorner[0], rightEyeCorner[1], rightEyeWidth, rightEyeHeight, faceCorner[0], faceCorner[1], faceWidth, faceHeight, leftEyeCorner[0], leftEyeCorner[1], leftEyeWidth, leftEyeHeight]
-                    temp = [labels[0][0], faceCorner, leftEyeCorner, rightEyeCorner, rects, label, labels[1][0], labels[2][0]]
+                    temp = [labels[0][0].split("\\")[0], labels[0][0], faceCorner, leftEyeCorner, rightEyeCorner, rects, label, labels[1][0], labels[2][0]]
                     # self.lines.append(temp)
 
                     # line = self.lines[idx]
@@ -108,9 +108,9 @@ class loader(Dataset):
                     # if not (self.data_type=='test'):
                     #    line = aug_line(copy.deepcopy(line), width, height)
 
-                    face_img = cv2.imread(os.path.join(Image_path, temp[0]))
-                    leftEye_img = cv2.imread(os.path.join(Image_path, temp[6]))
-                    rightEye_img = cv2.imread(os.path.join(Image_path, temp[7]))
+                    face_img = cv2.imread(os.path.join(Image_path, labels[0][0]))
+                    leftEye_img = cv2.imread(os.path.join(Image_path, labels[1][0]))
+                    rightEye_img = cv2.imread(os.path.join(Image_path, labels[2][0]))
 
                     if (face_img is None) or (leftEye_img is None) or (rightEye_img is None):
                         break
@@ -138,14 +138,15 @@ class loader(Dataset):
                     # ex_label = line[6]
                     # label = np.array([self.labels[line[0]]["XCam"][item_index],
                     #                   self.labels[line[0]]["YCam"][item_index]])
-                    label = temp[5]
+                    label = temp[6]
                     label = np.array(label).astype(float)
 
                     self.lines.append( {"faceImg": torch.from_numpy(face_img).type(torch.FloatTensor),
                             "leftEyeImg": torch.from_numpy(leftEye_img).type(torch.FloatTensor),
                             "rightEyeImg": torch.from_numpy(rightEye_img).type(torch.FloatTensor),
                             "rects": torch.from_numpy(np.array(rects)).type(torch.FloatTensor),
-                            "label": torch.from_numpy(label).type(torch.FloatTensor)})
+                            "label": torch.from_numpy(label).type(torch.FloatTensor),
+                            "frame": temp})
 
 
         # temp = json.load(name_file)
@@ -212,7 +213,8 @@ class loader(Dataset):
                 "leftEyeImg": line["leftEyeImg"],
                 "rightEyeImg": line["rightEyeImg"],
                 "rects": line["rects"],
-                "label": line["label"]}
+                "label": line["label"],
+                "frame": line["frame"]}
         # return {line}
                 # "exlabel": torch.from_numpy(np.array(line[6])).type(torch.FloatTensor), "frame": line}
 
