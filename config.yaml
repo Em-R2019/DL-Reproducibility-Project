@@ -12,7 +12,7 @@ train:
     model_name: "AFF-Net"
     step: 1
   data:
-    path: "data\\MPIIFaceGaze"
+    path: "label"
 test:
    load:
       begin_step: 1
@@ -21,4 +21,4 @@ test:
       model_name: "AFF-Net"
       load_path: "model"
    data:
-      path: "data\\MPIIFaceGaze"
+      path: "label"

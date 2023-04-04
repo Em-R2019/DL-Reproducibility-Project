@@ -53,10 +53,10 @@ class loader(Dataset):
             subject_path = os.path.join(data_path, subject)
             if ((not os.path.isdir(subject_path)) or subject=='01185' or subject=='01730' or subject=='02065'):
                 continue
-            info_json = json.load(open(os.path.join(subject_path, "info.json"), "r"))
+            info_json = json.load(open(os.path.join(data_path, "info.json"), "r"))
             current_data_type = info_json["Dataset"]
             device_name = info_json["DeviceName"]
-            self.labels[subject] = json.load(open(os.path.join(subject_path, "dotInfo.json"), "r"))
+            self.labels[subject] = json.load(open(os.path.join(subject_path, "newFaceLdmk.json"), "r"))
             if not current_data_type == data_type:
                 continue
 
@@ -67,8 +67,8 @@ class loader(Dataset):
             temp = json.load(name_file)
 
             self.lines = self.lines + temp
-            # if (len(self.lines)>=150000):
-            #    break
+            if (len(self.lines)>=1500):
+               break
 
 
     def __len__(self):
