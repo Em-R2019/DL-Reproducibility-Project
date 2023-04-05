@@ -21,7 +21,6 @@ if __name__ == "__main__":
     model_name = config["load"]["model_name"]
     load_path = os.path.join(config["load"]["load_path"])
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    #device = torch.device("cpu")
     save_name="evaluation"
 
     print(f"Test Set: tests")
@@ -57,7 +56,7 @@ if __name__ == "__main__":
         SE_log = open('./SE.log', 'w')
         with torch.no_grad():
             with open(os.path.join(load_path, f"{save_name}/{save_iter}.log"), 'w') as outfile:
-                outfile.write("subjcet,name,x,y,labelx,labely,error\n")
+                outfile.write("subject,name,x,y,labelx,labely,error\n")
                 for j, data in enumerate(dataset):
                     data["faceImg"] = data["faceImg"].to(device)
                     data["leftEyeImg"] = data["leftEyeImg"].to(device)

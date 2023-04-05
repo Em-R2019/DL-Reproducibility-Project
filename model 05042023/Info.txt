@@ -1,0 +1,29 @@
+MPIIFaceGaze 2D
+
+Trained on p0-p10, tested on p11-p14
+
+Config:
+---
+train:
+  params:
+    batch_size: 110
+    epoch: 12
+    lr: 0.001
+    decay: 0.1
+    decay_step:
+      - 8
+  save:
+    save_path: "model"
+    model_name: "AFF-Net"
+    step: 1
+  data:
+    path: "data\\output2D\\Train"
+test:
+   load:
+      begin_step: 1
+      end_step: 12
+      steps: 1
+      model_name: "AFF-Net"
+      load_path: "model"
+   data:
+      path: "data\\output2D\\Test"

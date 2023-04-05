@@ -13,32 +13,33 @@ def aug_line(line, width, height):
     bbox = np.array(line[2:5])
     bias = round(30 * random.uniform(-1, 1))
     bias = max(np.max(-bbox[0, [0, 2]]), bias)
-    bias = max(np.max(-2*bbox[1:, [0, 2]]+0.5), bias)
-    
+    bias = max(np.max(-2 * bbox[1:, [0, 2]] + 0.5), bias)
+
     line[2][0] += int(round(bias))
     line[2][1] += int(round(bias))
     line[2][2] += int(round(bias))
     line[2][3] += int(round(bias))
 
-    line[3][0] += int(round(0.5*bias))
-    line[3][1] += int(round(0.5*bias))
-    line[3][2] += int(round(0.5*bias))
-    line[3][3] += int(round(0.5*bias))
+    line[3][0] += int(round(0.5 * bias))
+    line[3][1] += int(round(0.5 * bias))
+    line[3][2] += int(round(0.5 * bias))
+    line[3][3] += int(round(0.5 * bias))
 
-    line[4][0] += int(round(0.5*bias))
-    line[4][1] += int(round(0.5*bias))
-    line[4][2] += int(round(0.5*bias))
-    line[4][3] += int(round(0.5*bias))
+    line[4][0] += int(round(0.5 * bias))
+    line[4][1] += int(round(0.5 * bias))
+    line[4][2] += int(round(0.5 * bias))
+    line[4][3] += int(round(0.5 * bias))
 
-    line[5][2] = line[2][2]/width
-    line[5][3] = line[2][0]/height
+    line[5][2] = line[2][2] / width
+    line[5][3] = line[2][0] / height
 
-    line[5][6] = line[3][2]/width
-    line[5][7] = line[3][0]/height
+    line[5][6] = line[3][2] / width
+    line[5][7] = line[3][0] / height
 
-    line[5][10] = line[4][2]/width
-    line[5][11] = line[4][0]/height
+    line[5][10] = line[4][2] / width
+    line[5][11] = line[4][0] / height
     return line
+
 
 class loader(Dataset):
 
@@ -75,22 +76,25 @@ class loader(Dataset):
                     labels = [i.split(',') for i in labels]
                     # labels = np.array(labels)
                     faceCorner = [float(l) for l in labels[10]]
-                    faceWidth = faceCorner[2]-faceCorner[0]
-                    faceHeight = faceCorner[3]-faceCorner[1]
+                    faceWidth = faceCorner[2] - faceCorner[0]
+                    faceHeight = faceCorner[3] - faceCorner[1]
 
                     leftEyeCorner = [float(l) for l in labels[11]]
-                    leftEyeWidth = leftEyeCorner[2]-leftEyeCorner[0]
-                    leftEyeHeight = leftEyeCorner[3]-leftEyeCorner[1]
+                    leftEyeWidth = leftEyeCorner[2] - leftEyeCorner[0]
+                    leftEyeHeight = leftEyeCorner[3] - leftEyeCorner[1]
 
                     rightEyeCorner = [float(l) for l in labels[12]]
-                    rightEyeWidth = rightEyeCorner[2]-rightEyeCorner[0]
-                    rightEyeHeight = rightEyeCorner[3]-rightEyeCorner[1]
+                    rightEyeWidth = rightEyeCorner[2] - rightEyeCorner[0]
+                    rightEyeHeight = rightEyeCorner[3] - rightEyeCorner[1]
 
                     label = [float(l) for l in line.strip().split(' ')[6].split(",")]
                     # label = np.array(label).astype('float')
 
-                    rects = [rightEyeCorner[0], rightEyeCorner[1], rightEyeWidth, rightEyeHeight, faceCorner[0], faceCorner[1], faceWidth, faceHeight, leftEyeCorner[0], leftEyeCorner[1], leftEyeWidth, leftEyeHeight]
-                    temp = [labels[0][0].split("\\")[0], labels[0][0], faceCorner, leftEyeCorner, rightEyeCorner, rects, label, labels[1][0], labels[2][0]]
+                    rects = [rightEyeCorner[0], rightEyeCorner[1], rightEyeWidth, rightEyeHeight, faceCorner[0],
+                             faceCorner[1], faceWidth, faceHeight, leftEyeCorner[0], leftEyeCorner[1], leftEyeWidth,
+                             leftEyeHeight]
+                    temp = [labels[0][0].split("\\")[0], labels[0][0], faceCorner, leftEyeCorner, rightEyeCorner, rects,
+                            label, labels[1][0], labels[2][0]]
                     # self.lines.append(temp)
 
                     # line = self.lines[idx]
@@ -117,9 +121,8 @@ class loader(Dataset):
 
                     face_img = cv2.resize(face_img, (224, 224))
                     face_img = cv2.cvtColor(face_img, cv2.COLOR_BGR2RGB)
-                    face_img = face_img/255
+                    face_img = face_img / 255
                     face_img = face_img.transpose(2, 0, 1)
-
 
                     leftEye_img = cv2.resize(leftEye_img, (112, 112))
                     leftEye_img = cv2.cvtColor(leftEye_img, cv2.COLOR_BGR2RGB)
@@ -132,8 +135,6 @@ class loader(Dataset):
                     rightEye_img = rightEye_img / 255
                     rightEye_img = rightEye_img.transpose(2, 0, 1)
 
-
-
                     # rects = line[5]
                     # ex_label = line[6]
                     # label = np.array([self.labels[line[0]]["XCam"][item_index],
@@ -141,18 +142,16 @@ class loader(Dataset):
                     label = temp[6]
                     label = np.array(label).astype(float)
 
-                    self.lines.append( {"faceImg": torch.from_numpy(face_img).type(torch.FloatTensor),
-                            "leftEyeImg": torch.from_numpy(leftEye_img).type(torch.FloatTensor),
-                            "rightEyeImg": torch.from_numpy(rightEye_img).type(torch.FloatTensor),
-                            "rects": torch.from_numpy(np.array(rects)).type(torch.FloatTensor),
-                            "label": torch.from_numpy(label).type(torch.FloatTensor),
-                            "frame": temp})
+                    self.lines.append({"faceImg": torch.from_numpy(face_img).type(torch.FloatTensor),
+                                       "leftEyeImg": torch.from_numpy(leftEye_img).type(torch.FloatTensor),
+                                       "rightEyeImg": torch.from_numpy(rightEye_img).type(torch.FloatTensor),
+                                       "rects": torch.from_numpy(np.array(rects)).type(torch.FloatTensor),
+                                       "label": torch.from_numpy(label).type(torch.FloatTensor),
+                                       "frame": temp})
 
-
-        # temp = json.load(name_file)
-            if (len(self.lines)>=1500):
-                break
-
+            # temp = json.load(name_file)
+            # if len(self.lines) >= 1500:
+            #     break
 
     def __len__(self):
         return len(self.lines)
@@ -209,14 +208,14 @@ class loader(Dataset):
         # label = line[5]
         # label = np.array(label).astype(float)
 
-        return {"faceImg" : line["faceImg"],
+        return {"faceImg": line["faceImg"],
                 "leftEyeImg": line["leftEyeImg"],
                 "rightEyeImg": line["rightEyeImg"],
                 "rects": line["rects"],
                 "label": line["label"],
                 "frame": line["frame"]}
         # return {line}
-                # "exlabel": torch.from_numpy(np.array(line[6])).type(torch.FloatTensor), "frame": line}
+        # "exlabel": torch.from_numpy(np.array(line[6])).type(torch.FloatTensor), "frame": line}
 
 
 def txtload(path, type, batch_size, shuffle=False, num_workers=0):
@@ -233,7 +232,7 @@ if __name__ == "__main__":
     type = "train"
     loader = txtload(path, type, batch_size=2)
     for i, (data) in enumerate(loader):
-        #print(data['frame'][0][0] + ' ' + data['frame'][1][0])
+        # print(data['frame'][0][0] + ' ' + data['frame'][1][0])
         '''print(data['faceImg'][0].shape)
                                 print(torch.mean(data['faceImg'][0]))
                                 print(torch.mean(data['leftEyeImg'][0]))
