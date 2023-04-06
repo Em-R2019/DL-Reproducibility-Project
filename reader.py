@@ -7,6 +7,8 @@ import json
 import random
 import copy
 
+from tqdm import tqdm
+
 
 # randomly move the bounding box around
 def aug_line(line, width, height):
@@ -51,21 +53,7 @@ class loader(Dataset):
         label_path = data_path + "\\Label"
         subjects = os.listdir(label_path)
         subjects.sort()
-        for subject in subjects:
-            # subject_path = os.path.join(data_path, subject)
-            # if ((not os.path.isdir(subject_path)) or subject=='01185' or subject=='01730' or subject=='02065'):
-            #     continue
-            # info_json = json.load(open(os.path.join(data_path, "info.json"), "r"))
-            # current_data_type = info_json["Dataset"]
-            # device_name = info_json["DeviceName"]
-            # self.labels[subject] = json.load(open(os.path.join(subject_path, "newFaceLdmk.json"), "r"))
-            # if not current_data_type == data_type:
-            #     continue
-            #
-            # # test on iPhone datas only
-            # # if data_type=="test" and device_name[:6]!="iPhone":
-            # #     continue
-            # name_file = open(os.path.join(subject_path, "newFaceLdmk.json"), "r")
+        for subject in tqdm(subjects):
 
             with open(os.path.join(label_path, subject), "r") as file:
                 for line in file:
@@ -97,62 +85,6 @@ class loader(Dataset):
                             label, labels[1][0], labels[2][0]]
                     self.lines.append(temp)
 
-                    # line = self.lines[idx]
-                    #
-                    # Image_path = os.path.join(self.data_path, 'Image')
-                    # # frame = line[1]
-                    # # item_index = int(frame[:-4])
-                    # # img = cv2.imread(os.path.join(subject_path, "frames", frame))
-                    # # img = np.array(img)
-                    # # height = img.shape[0]
-                    # # width = img.shape[1]
-                    # #
-                    # # origin = copy.deepcopy(line)
-                    # # # print(line[2])
-                    # # if not (self.data_type=='test'):
-                    # #    line = aug_line(copy.deepcopy(line), width, height)
-                    #
-                    # face_img = cv2.imread(os.path.join(Image_path, labels[0][0]))
-                    # leftEye_img = cv2.imread(os.path.join(Image_path, labels[1][0]))
-                    # rightEye_img = cv2.imread(os.path.join(Image_path, labels[2][0]))
-                    #
-                    # if (face_img is None) or (leftEye_img is None) or (rightEye_img is None):
-                    #     break
-                    #
-                    # face_img = cv2.resize(face_img, (224, 224))
-                    # face_img = cv2.cvtColor(face_img, cv2.COLOR_BGR2RGB)
-                    # face_img = face_img / 255
-                    # face_img = face_img.transpose(2, 0, 1)
-                    #
-                    # leftEye_img = cv2.resize(leftEye_img, (112, 112))
-                    # leftEye_img = cv2.cvtColor(leftEye_img, cv2.COLOR_BGR2RGB)
-                    # leftEye_img = leftEye_img / 255
-                    # leftEye_img = leftEye_img.transpose(2, 0, 1)
-                    #
-                    # rightEye_img = cv2.resize(rightEye_img, (112, 112))
-                    # rightEye_img = cv2.cvtColor(rightEye_img, cv2.COLOR_BGR2RGB)
-                    # rightEye_img = cv2.flip(rightEye_img, 1)
-                    # rightEye_img = rightEye_img / 255
-                    # rightEye_img = rightEye_img.transpose(2, 0, 1)
-                    #
-                    # # rects = line[5]
-                    # # ex_label = line[6]
-                    # # label = np.array([self.labels[line[0]]["XCam"][item_index],
-                    # #                   self.labels[line[0]]["YCam"][item_index]])
-                    # label = temp[6]
-                    # label = np.array(label).astype(float)
-                    #
-                    # self.lines.append({"faceImg": torch.from_numpy(face_img).type(torch.FloatTensor),
-                    #                    "leftEyeImg": torch.from_numpy(leftEye_img).type(torch.FloatTensor),
-                    #                    "rightEyeImg": torch.from_numpy(rightEye_img).type(torch.FloatTensor),
-                    #                    "rects": torch.from_numpy(np.array(rects)).type(torch.FloatTensor),
-                    #                    "label": torch.from_numpy(label).type(torch.FloatTensor),
-                    #                    "frame": temp})
-
-            # temp = json.load(name_file)
-            # if len(self.lines) >= 1500:
-            #     break
-
     def __len__(self):
         return len(self.lines)
 
@@ -163,24 +95,10 @@ class loader(Dataset):
         line = self.lines[idx]
 
         Image_path = os.path.join(self.data_path, 'Image')
-        # frame = line[1]
-        # item_index = int(frame[:-4])
-        # img = cv2.imread(os.path.join(subject_path, "frames", frame))
-        # img = np.array(img)
-        # height = img.shape[0]
-        # width = img.shape[1]
-        #
-        # origin = copy.deepcopy(line)
-        # # print(line[2])
-        # if not (self.data_type=='test'):
-        #    line = aug_line(copy.deepcopy(line), width, height)
 
         face_img = cv2.imread(os.path.join(Image_path, line[1]))
         leftEye_img = cv2.imread(os.path.join(Image_path, line[7]))
         rightEye_img = cv2.imread(os.path.join(Image_path, line[8]))
-
-        # if (face_img is None) or (leftEye_img is None) or (rightEye_img is None):
-        #     break
 
         face_img = cv2.resize(face_img, (224, 224))
         face_img = cv2.cvtColor(face_img, cv2.COLOR_BGR2RGB)
@@ -198,10 +116,7 @@ class loader(Dataset):
         rightEye_img = rightEye_img / 255
         rightEye_img = rightEye_img.transpose(2, 0, 1)
 
-        # rects = line[5]
-        # ex_label = line[6]
-        # label = np.array([self.labels[line[0]]["XCam"][item_index],
-        #                   self.labels[line[0]]["YCam"][item_index]])
+
         label = line[6]
         label = np.array(label).astype(float)
 
@@ -211,8 +126,6 @@ class loader(Dataset):
                 "rects": torch.from_numpy(np.array(line[5])).type(torch.FloatTensor),
                 "label": torch.from_numpy(label).type(torch.FloatTensor),
                 "frame": line}
-        # return {line}
-        # "exlabel": torch.from_numpy(np.array(line[6])).type(torch.FloatTensor), "frame": line}
 
 
 def txtload(path, type, batch_size, shuffle=False, num_workers=0):

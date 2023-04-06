@@ -12,7 +12,7 @@ train:
     model_name: "AFF-Net"
     step: 1
   data:
-    path: "data\\output2D\\Train"
+    path: "output2D\\Train"
 test:
    load:
       begin_step: 1
@@ -21,4 +21,4 @@ test:
       model_name: "AFF-Net"
       load_path: "model"
    data:
-      path: "data\\output2D\\Test"
+      path: "output2D\\Test"
