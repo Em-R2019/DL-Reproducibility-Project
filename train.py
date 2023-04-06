@@ -80,7 +80,9 @@ if __name__ == "__main__":
                 # person_time * (len(subjects) - subject_i - 1)
                 log = f"[{epoch}/{config['params']['epoch']}]: [{i}/{length}] loss:{loss:.5f} lr:{base_lr} time:{time_remain:.2f}h total:{time_remain_total:.2f}h"
                 outfile.write(log + "\n")
-                if i % 195 == 0:
+
+                batch_size = config['params']['batch_size']
+                if i % batch_size == 0:
                     print(log)
                     sys.stdout.flush()
                     outfile.flush()

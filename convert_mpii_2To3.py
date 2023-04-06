@@ -92,7 +92,7 @@ def convert_mpii_2T3(screen_pose, screen_size, logfile, annofolder, ispixel, isp
 
 if __name__ == "__main__":
 
-    parser  = argparse.ArgumentParser(description="Convert 3D gaze to 2D gaze on MPIIGaze")  
+    parser  = argparse.ArgumentParser(description="Convert 2D gaze to 3D gaze on MPIIGaze")
     
     parser.add_argument('--screenPose', type=str, default="/home/cyh/GazeDataset20200519/Original/MPIIFaceGaze/p00/Calibration/monitorPose.mat")
 
