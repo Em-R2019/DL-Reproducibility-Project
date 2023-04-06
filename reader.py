@@ -130,23 +130,10 @@ class loader(Dataset):
 
 def txtload(path, type, batch_size, shuffle=False, num_workers=0):
     dataset = loader(path, type)
-    print("[Read Data]: GazeCapture Dataset")
+    print("[Read Data]: MPIIFaceGaze Dataset")
     print("[Read Data]: Total num: {:d}".format(len(dataset)))
     print("[Read Data]: Dataset type: {:s}".format(type))
     load = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
     return load
 
 
-if __name__ == "__main__":
-    path = "/home/byw/Dataset/GazeCapture/"
-    type = "train"
-    loader = txtload(path, type, batch_size=2)
-    for i, (data) in enumerate(loader):
-        # print(data['frame'][0][0] + ' ' + data['frame'][1][0])
-        '''print(data['faceImg'][0].shape)
-                                print(torch.mean(data['faceImg'][0]))
-                                print(torch.mean(data['leftEyeImg'][0]))
-                                print(torch.mean(data['rightEyeImg'][0]))
-                                print(data['rects'][0])
-                                print(data['exlabel'][0])'''
-        break

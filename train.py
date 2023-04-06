@@ -1,16 +1,11 @@
 import gc
 import model
 import reader
-import numpy as np
-import cv2
 import torch
 import torch.nn as nn
-import torch.optim as optim
 import sys
 import os
-import copy
 import yaml
-import math
 import time
 
 if __name__ == "__main__":
@@ -27,13 +22,13 @@ if __name__ == "__main__":
 
     print("Read data")
     dataset = reader.txtload(path, "train", config["params"]["batch_size"], shuffle=True,
-                             num_workers=0)
+                             num_workers=12)
 
     print("Model building")
     net = model.model()
 
     net.train()
-    net = nn.DataParallel(net)
+    # net = nn.DataParallel(net)
     # state_dict = torch.load(os.path.join(save_path, f"Iter_10_best_flip.pt"))
     # net.load_state_dict(state_dict)
     net.to(device)
@@ -68,7 +63,7 @@ if __name__ == "__main__":
                 # print(data["face"].shape)
                 # print(data["left"].shape)
                 # print(data['head_pose'].shape)
-                gc.collect()
+                # gc.collect()
                 torch.cuda.empty_cache()
                 gaze = net(data["leftEyeImg"], data["rightEyeImg"], data['faceImg'], data['rects'])
                 loss = loss_op(gaze, label) * 4
@@ -77,7 +72,7 @@ if __name__ == "__main__":
                 loss.backward()
                 optimizer.step()
                 time_remain = (length - i - 1) * (
-                            (time.time() - time_begin) / (i + 1)) / 3600  # time estimation for current epoch
+                        (time.time() - time_begin) / (i + 1)) / 3600  # time estimation for current epoch
                 epoch_time = (length - 1) * ((time.time() - time_begin) / (i + 1)) / 3600  # time estimation for 1 epoch
                 # person_time = epoch_time * (config["params"]["epoch"])                  #time estimation for 1 subject
                 time_remain_total = time_remain + \
@@ -85,10 +80,11 @@ if __name__ == "__main__":
                 # person_time * (len(subjects) - subject_i - 1)
                 log = f"[{epoch}/{config['params']['epoch']}]: [{i}/{length}] loss:{loss:.5f} lr:{base_lr} time:{time_remain:.2f}h total:{time_remain_total:.2f}h"
                 outfile.write(log + "\n")
-                # if i % 20 == 0:
-                print(log)
-                sys.stdout.flush()
-                outfile.flush()
+                if i % 195 == 0:
+                    print(log)
+                    sys.stdout.flush()
+                    outfile.flush()
+                    gc.collect()
 
             if epoch % config["save"]["step"] == 0:
                 torch.save(net.state_dict(), os.path.join(save_path, f"Iter_{epoch}_{model_name}.pt"))
