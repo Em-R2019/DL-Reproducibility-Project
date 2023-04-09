@@ -9,29 +9,6 @@ from scipy import io as sio
 import argparse
 
 
-def main(args):
-    total_loss = 0
-    total_count = 0
-
-    # for i in ["p00", "p01", "p02", "p03", "p04", "p05", "p06", "p07", "p08", "p09", "p10", "p11", "p12", "p13", "p14"]:
-    for i in ["p11", "p12", "p13", "p14"]:
-        logfile = os.path.join(args.logfolder, f"{args.name}")
-
-        gaze_loss, count = convert_mpii_2T3(args.screenPose,
-                                            args.screenSize,
-                                            logfile,
-                                            args.label,
-                                            i
-                                            # args.ispixel,
-                                            # args.isprint,
-                                            # args.expand
-                                            )
-
-        total_loss += gaze_loss
-        total_count += count
-    return total_loss / total_count, total_count
-
-
 def read_file(path, subject):
     with open(path) as infile:
         lines = infile.readlines()
@@ -60,7 +37,7 @@ def convert_mpii_2T3(screen_pose, screen_size, logfile, annofolder, person, ispi
     tvec = screen_pose["tvecs"]
     rmat = cv2.Rodrigues(rvec)[0]
 
-    # Convet pixel to mm
+    # Convert pixel to mm
     screen = sio.loadmat(screen_size)
     w_pixel = screen["width_pixel"][0][0]
     h_pixel = screen["height_pixel"][0][0]
@@ -116,22 +93,35 @@ def convert_mpii_2T3(screen_pose, screen_size, logfile, annofolder, person, ispi
     return total_loss, count + 1
 
 
+def main(name, logfolder, calibrationfolder, labelfolder):
+    total_loss = 0
+    total_count = 0
+
+    # for person in ["p00", "p01", "p02", "p03", "p04", "p05", "p06", "p07", "p08", "p09", "p10", "p11", "p12", "p13", "p14"]:
+    for person in ["p11", "p12", "p13", "p14"]:
+        logfile = os.path.join(logfolder, f"{name}.log")
+        screenPose = os.path.join(calibrationfolder, f"{person}/Calibration/monitorPose.mat")
+        screenSize = os.path.join(calibrationfolder, f"{person}/Calibration/screenSize.mat")
+
+        gaze_loss, count = convert_mpii_2T3(screenPose,
+                                            screenSize,
+                                            logfile,
+                                            labelfolder,
+                                            person
+                                            # args.ispixel,
+                                            # args.isprint,
+                                            # args.expand
+                                            )
+
+        total_loss += gaze_loss
+        total_count += count
+    return total_loss / total_count, total_count
+
+
 if __name__ == "__main__":
     evaluation_path = "model 05042023/evaluation/"
-
-    parser = argparse.ArgumentParser(description="Convert 3D gaze to 2D gaze on MPIIGaze")
-
-    parser.add_argument('--screenPose', type=str, default="data/MPIIFaceGaze/p00/Calibration/monitorPose.mat")
-
-    parser.add_argument('--screenSize', type=str, default="data/MPIIFaceGaze/p00/Calibration/screenSize.mat")
-
-    parser.add_argument('--logfolder', type=str, default=evaluation_path)
-
-    parser.add_argument('--label', type=str, default="data/output2/Label/")
-
-    parser.add_argument('--name', type=str, default="log")
-
-    args = parser.parse_args()
+    calibration_path = "data/MPIIFaceGaze/"
+    label_path = "data/output2/Label/"
 
     epoch_log_3D = open(os.path.join(evaluation_path, "epoch3D.log"), 'w')
 
@@ -140,8 +130,8 @@ if __name__ == "__main__":
     tests = range(config["begin_step"], config["end_step"] + 1)
 
     for test in tests:
-        args.name = str(test) + ".log"
-        acc, count = main(args)
+        acc, count = main(str(test), evaluation_path, calibration_path, label_path)
+
         loger = f"[{test}] Total Num: {count}, acc: {acc} \n"
         print(loger)
         epoch_log_3D.write(loger)
