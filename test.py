@@ -38,7 +38,7 @@ if __name__ == "__main__":
     begin = config["load"]["begin_step"]
     end = config["load"]["end_step"]
     step = config["load"]["steps"]
-    epoch_log = open(os.path.join(load_path, f"{save_name}/epoch.log"), 'a')
+    epoch_log = open(os.path.join(load_path, f"{save_name}/epoch.log"), 'w')
     for save_iter in range(begin, end + step, step):
         print("Model building")
         net = model.model()
