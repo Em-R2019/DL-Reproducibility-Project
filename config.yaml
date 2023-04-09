@@ -2,7 +2,7 @@
 train:
   params:
     batch_size: 170
-    epoch: 12
+    epoch: 17
     lr: 0.001
     decay: 0.1
     decay_step:
@@ -12,13 +12,13 @@ train:
     model_name: "AFF-Net"
     step: 1
   data:
-    path: "output2D\\Train"
+    path: "data\\output2D\\Train"
 test:
    load:
       begin_step: 1
       end_step: 12
       steps: 1
       model_name: "AFF-Net"
-      load_path: "model"
+      load_path: "model 05042023"
    data:
-      path: "output2D\\Test"
+      path: "data\\output2D\\Train"

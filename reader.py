@@ -116,7 +116,6 @@ class loader(Dataset):
         rightEye_img = rightEye_img / 255
         rightEye_img = rightEye_img.transpose(2, 0, 1)
 
-
         label = line[6]
         label = np.array(label).astype(float)
 
