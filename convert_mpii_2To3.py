@@ -57,6 +57,7 @@ def convert_mpii_2T3(screen_pose, screen_size, logfile, annofolder, person, ispi
         lines.pop(0)
 
     total_loss = 0
+    count = 0
     for count, (name, gt, prediction) in enumerate(read_file(logfile, person)):
         annos = lines[count].strip().split(" ")
 
@@ -90,7 +91,9 @@ def convert_mpii_2T3(screen_pose, screen_size, logfile, annofolder, person, ispi
         if isprint:
             print(name, pred_norm, gt_norm, gaze_loss)
 
-    return total_loss, count + 1
+        count = count + 1
+
+    return total_loss, count
 
 
 def main(name, logfolder, calibrationfolder, labelfolder):
@@ -119,13 +122,13 @@ def main(name, logfolder, calibrationfolder, labelfolder):
 
 
 if __name__ == "__main__":
-    evaluation_path = "model 05042023/evaluation/"
+    evaluation_path = "model14/evaluation/"
     calibration_path = "data/MPIIFaceGaze/"
     label_path = "data/output2/Label/"
 
     epoch_log_3D = open(os.path.join(evaluation_path, "epoch3D.log"), 'w')
 
-    config = yaml.safe_load(open("config.yaml"))
+    config = yaml.safe_load(open("configs/configp14.yaml"))
     config = config["test"]["load"]
     tests = range(config["begin_step"], config["end_step"] + 1)
 
