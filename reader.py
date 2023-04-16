@@ -45,7 +45,7 @@ def aug_line(line, width, height):
 
 class loader(Dataset):
 
-    def __init__(self, data_path, data_type):
+    def __init__(self, data_path, data_type, leave_out):
         self.lines = []
         self.labels = {}
         self.data_path = data_path
@@ -54,7 +54,11 @@ class loader(Dataset):
         subjects = os.listdir(label_path)
         subjects.sort()
         for subject in tqdm(subjects):
-
+            if data_type == "train" and subject == leave_out + ".label":
+                # print("Leave out " + leave_out)
+                continue
+            elif data_type == "test" and subject != leave_out + ".label":
+                continue
             with open(os.path.join(label_path, subject), "r") as file:
                 for line in file:
                     labels = line.strip().split(' ')
@@ -84,6 +88,7 @@ class loader(Dataset):
                     temp = [labels[0][0].split("\\")[0], labels[0][0], faceCorner, leftEyeCorner, rightEyeCorner, rects,
                             label, labels[1][0], labels[2][0]]
                     self.lines.append(temp)
+
 
     def __len__(self):
         return len(self.lines)
@@ -127,8 +132,8 @@ class loader(Dataset):
                 "frame": line}
 
 
-def txtload(path, type, batch_size, shuffle=False, num_workers=0):
-    dataset = loader(path, type)
+def txtload(path, type, leave_out, batch_size, shuffle=False, num_workers=0):
+    dataset = loader(path, type, leave_out)
     print("[Read Data]: MPIIFaceGaze Dataset")
     print("[Read Data]: Total num: {:d}".format(len(dataset)))
     print("[Read Data]: Dataset type: {:s}".format(type))

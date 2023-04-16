@@ -17,11 +17,12 @@ def dis(p1, p2):
 
 
 if __name__ == "__main__":
-    config = yaml.safe_load(open("config.yaml"))
+    config = yaml.safe_load(open("configs/config.yaml"))
     config = config["test"]
     path = config["data"]["path"]
     model_name = config["load"]["model_name"]
     load_path = os.path.join(config["load"]["load_path"])
+    leave_out = config["data"]["leave_out"]
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     save_name = "evaluation"
 
@@ -33,7 +34,7 @@ if __name__ == "__main__":
         os.makedirs(os.path.join(load_path, save_name))
 
     print("Read data")
-    dataset = reader.txtload(path, "test", 256, num_workers=0, shuffle=False)
+    dataset = reader.txtload(path, "test", leave_out, 256, num_workers=12, shuffle=False)
 
     begin = config["load"]["begin_step"]
     end = config["load"]["end_step"]
