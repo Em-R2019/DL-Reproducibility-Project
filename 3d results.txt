@@ -1,0 +1,5 @@
+average 3d 0-2 and 11-14: 4.21
+
+average 3d 6-10: 5.02
+
+total average: 4.56

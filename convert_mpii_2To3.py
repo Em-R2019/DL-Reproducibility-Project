@@ -8,6 +8,7 @@ import cv2
 from scipy import io as sio
 import argparse
 
+scale = True
 
 def read_file(path, subject):
     with open(path) as infile:
@@ -81,8 +82,14 @@ def convert_mpii_2T3(screen_pose, screen_size, logfile, annofolder, person, ispi
         pred_ccs = co.Gaze2DTo3D(prediction, origin_ccs.flatten(), rmat, tvec)
         gt_ccs = co.Gaze2DTo3D(gt, origin_ccs.flatten(), rmat, tvec)
 
-        pred_norm = np.dot(Smat, np.dot(Rmat, np.reshape(pred_ccs, (3, 1))))
-        gt_norm = np.dot(Smat, np.dot(Rmat, np.reshape(gt_ccs, (3, 1))))
+
+        if scale == True :
+            pred_norm = np.dot(Smat, np.dot(Rmat, np.reshape(pred_ccs, (3, 1))))
+            gt_norm = np.dot(Smat, np.dot(Rmat, np.reshape(gt_ccs, (3, 1))))
+        else:
+            pred_norm = np.dot(Rmat, np.reshape(pred_ccs, (3, 1)))
+            gt_norm = np.dot(Rmat, np.reshape(gt_ccs, (3, 1)))
+
         pred_norm = pred_norm.flatten() / np.linalg.norm(pred_norm)
         gt_norm = gt_norm.flatten() / np.linalg.norm(gt_norm)
         gaze_loss = dpc.AngularLoss(pred_norm, gt_norm)
@@ -100,8 +107,9 @@ def main(name, logfolder, calibrationfolder, labelfolder):
     total_loss = 0
     total_count = 0
 
-    # for person in ["p00", "p01", "p02", "p03", "p04", "p05", "p06", "p07", "p08", "p09", "p10", "p11", "p12", "p13", "p14"]:
-    for person in ["p11", "p12", "p13", "p14"]:
+    for person in ["p00", "p01", "p02", "p03", "p04", "p05", "p06", "p07", "p08", "p09", "p10", "p11", "p12", "p13",
+                   "p14"]:
+    # for person in ["p11", "p12", "p13", "p14"]:
         logfile = os.path.join(logfolder, f"{name}.log")
         screenPose = os.path.join(calibrationfolder, f"{person}/Calibration/monitorPose.mat")
         screenSize = os.path.join(calibrationfolder, f"{person}/Calibration/screenSize.mat")
@@ -122,13 +130,13 @@ def main(name, logfolder, calibrationfolder, labelfolder):
 
 
 if __name__ == "__main__":
-    evaluation_path = "model14/evaluation/"
+    evaluation_path = "model02/evaluation/"
     calibration_path = "data/MPIIFaceGaze/"
     label_path = "data/output2/Label/"
 
     epoch_log_3D = open(os.path.join(evaluation_path, "epoch3D.log"), 'w')
 
-    config = yaml.safe_load(open("configs/configp14.yaml"))
+    config = yaml.safe_load(open("configs/configp02.yaml"))
     config = config["test"]["load"]
     tests = range(config["begin_step"], config["end_step"] + 1)
 
