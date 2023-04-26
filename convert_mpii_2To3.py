@@ -8,7 +8,7 @@ import cv2
 from scipy import io as sio
 import argparse
 
-scale = True
+scale = False
 
 def read_file(path, subject):
     with open(path) as infile:
@@ -130,7 +130,7 @@ def main(name, logfolder, calibrationfolder, labelfolder):
 
 
 if __name__ == "__main__":
-    evaluation_path = "model14/evaluation/"
+    evaluation_path = "model13/evaluation/"
     calibration_path = "data/MPIIFaceGaze/"
     label_path = "data/output2/Label/"
 
