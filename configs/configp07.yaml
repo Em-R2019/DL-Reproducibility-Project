@@ -1,0 +1,26 @@
+---
+train:
+  params:
+    batch_size: 170
+    epoch: 17
+    lr: 0.001
+    decay: 0.1
+    decay_step:
+      - 8
+  save:
+    save_path: "model07"
+    model_name: "AFF-Net"
+    step: 1
+  data:
+    path: "data\\output2D"
+    leave_out: "p07"
+test:
+   load:
+      begin_step: 1
+      end_step: 17
+      steps: 1
+      model_name: "AFF-Net"
+      load_path: "model07"
+   data:
+      path: "data\\output2D"
+      leave_out: "p07"

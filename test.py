@@ -53,6 +53,7 @@ if __name__ == "__main__":
 
         print(f"Test {save_iter}")
         length = len(dataset)
+        print(length)
         total = 0
         count = 0
         loss_fn = torch.nn.MSELoss()
@@ -60,6 +61,7 @@ if __name__ == "__main__":
         with torch.no_grad():
             with open(os.path.join(load_path, f"{save_name}/{save_iter}.log"), 'w') as outfile:
                 outfile.write("subject,name,x,y,labelx,labely,error\n")
+                print(dataset.__dict__)
                 for j, data in enumerate(dataset):
                     data["faceImg"] = data["faceImg"].to(device)
                     data["leftEyeImg"] = data["leftEyeImg"].to(device)

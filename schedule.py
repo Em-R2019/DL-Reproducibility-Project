@@ -8,10 +8,12 @@ if __name__ == "__main__":
     for config in configs:
         name = os.path.join(config_path, config)
         newname = os.path.join(config_path, "config.yaml")
-        os.rename(name, newname)
+        os.replace(name, newname)
+        print(name, newname)
+        print(os.getcwd())
 
-        subprocess.run('python train.py')
-        print('Finished training ' + config)
+        subprocess.Popen(["venv/Scripts/python.exe", "test.py"]).wait()
+        print('Finished testing ' + config)
         # subprocess.run('python test.py')
         # print('Finished testing ' + config)
         os.rename(newname, name)

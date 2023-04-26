@@ -133,6 +133,7 @@ class loader(Dataset):
 
 
 def txtload(path, type, leave_out, batch_size, shuffle=False, num_workers=0):
+    print(path)
     dataset = loader(path, type, leave_out)
     print("[Read Data]: MPIIFaceGaze Dataset")
     print("[Read Data]: Total num: {:d}".format(len(dataset)))

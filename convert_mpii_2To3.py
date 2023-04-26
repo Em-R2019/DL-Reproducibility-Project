@@ -130,13 +130,13 @@ def main(name, logfolder, calibrationfolder, labelfolder):
 
 
 if __name__ == "__main__":
-    evaluation_path = "model02/evaluation/"
+    evaluation_path = "model14/evaluation/"
     calibration_path = "data/MPIIFaceGaze/"
     label_path = "data/output2/Label/"
 
     epoch_log_3D = open(os.path.join(evaluation_path, "epoch3D.log"), 'w')
 
-    config = yaml.safe_load(open("configs/configp02.yaml"))
+    config = yaml.safe_load(open("configs/configp14.yaml"))
     config = config["test"]["load"]
     tests = range(config["begin_step"], config["end_step"] + 1)
 

@@ -1,7 +1,7 @@
 ---
 train:
   params:
-    batch_size: 110
+    batch_size: 170
     epoch: 17
     lr: 0.001
     decay: 0.1
