@@ -1,6 +1,5 @@
 import gc
 from datetime import datetime
-
 import model
 import reader
 import torch
@@ -22,8 +21,6 @@ if __name__ == "__main__":
         os.makedirs(save_path)
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    # device = torch.device("cpu")
-
 
     print("Read data")
     dataset = reader.txtload(path, "train", leave_out, config["params"]["batch_size"], shuffle=True,
