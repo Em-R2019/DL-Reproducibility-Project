@@ -1,20 +1,17 @@
 import os
-import sys
 import numpy as np
 import yaml
 import data_processing_core as dpc
 import gazeconversion as co
 import cv2
 from scipy import io as sio
-import argparse
 
-scale = True
+scale = False
 
 def read_file(path, subject):
     with open(path) as infile:
         lines = infile.readlines()
         lines.pop(0)
-        # acc = lines.pop(-1)
 
     for line in lines:
         line = line.strip().split(",")
@@ -48,10 +45,7 @@ def convert_mpii_2T3(screen_pose, screen_size, logfile, annofolder, person, ispi
     h_ratio = h_mm / h_pixel
     ratio = np.array([w_ratio, h_ratio])
 
-    # read gaze origin from annotation file
-    # person = os.path.split(logfile)[0]
-    # person = os.path.split(person)[1].split(".")[0]
-    # person = "p00"
+    # read gaze origin, rmat and smat from annotation file
     annotation = os.path.join(annofolder, f"{person}.label")
     with open(annotation) as infile:
         lines = infile.readlines()
@@ -82,7 +76,6 @@ def convert_mpii_2T3(screen_pose, screen_size, logfile, annofolder, person, ispi
         pred_ccs = co.Gaze2DTo3D(prediction, origin_ccs.flatten(), rmat, tvec)
         gt_ccs = co.Gaze2DTo3D(gt, origin_ccs.flatten(), rmat, tvec)
 
-
         if scale == True :
             pred_norm = np.dot(Smat, np.dot(Rmat, np.reshape(pred_ccs, (3, 1))))
             gt_norm = np.dot(Smat, np.dot(Rmat, np.reshape(gt_ccs, (3, 1))))
@@ -109,7 +102,6 @@ def main(name, logfolder, calibrationfolder, labelfolder):
 
     for person in ["p00", "p01", "p02", "p03", "p04", "p05", "p06", "p07", "p08", "p09", "p10", "p11", "p12", "p13",
                    "p14"]:
-    # for person in ["p11", "p12", "p13", "p14"]:
         logfile = os.path.join(logfolder, f"{name}.log")
         screenPose = os.path.join(calibrationfolder, f"{person}/Calibration/monitorPose.mat")
         screenSize = os.path.join(calibrationfolder, f"{person}/Calibration/screenSize.mat")
@@ -119,9 +111,6 @@ def main(name, logfolder, calibrationfolder, labelfolder):
                                             logfile,
                                             labelfolder,
                                             person
-                                            # args.ispixel,
-                                            # args.isprint,
-                                            # args.expand
                                             )
 
         total_loss += gaze_loss
@@ -130,13 +119,13 @@ def main(name, logfolder, calibrationfolder, labelfolder):
 
 
 if __name__ == "__main__":
-    evaluation_path = "model02/evaluation/"
+    evaluation_path = "models/model10/evaluation/"
     calibration_path = "data/MPIIFaceGaze/"
     label_path = "data/output2/Label/"
 
-    epoch_log_3D = open(os.path.join(evaluation_path, "epoch3D.log"), 'w')
+    epoch_log_3D = open(os.path.join(evaluation_path, "epoch3D-False.log"), 'w')
 
-    config = yaml.safe_load(open("configs/configp02.yaml"))
+    config = yaml.safe_load(open("configs/configp08.yaml"))
     config = config["test"]["load"]
     tests = range(config["begin_step"], config["end_step"] + 1)
 
