@@ -22,7 +22,7 @@ Both the 2D and 3D dataprocessing scripts need to be run on the MPIIFaceGaze dat
 ### Reader
 The 2D .label files have the following structure:
 ```
-face left right grid origin whicheye 2DPoint Headrot HeadTrans ratio FaceCorner LeftEyeCorner RightEyeCorner
+Face Left Right Grid Origin whicheye 2DPoint HeadRot HeadTrans ratio FaceCorner LeftEyeCorner RightEyeCorner
 ```
 Of these we use the image paths `face`, `left` and `right`, the ground truth `2DPoint` and the coordinate pairs `FaceCorner`, `LeftEyeCorner` and `RightEyeCorner`. The last three indicate the lower left and upper right corners of their respective bounding boxes. These are used to create rects, which is a list of the x, y coordinates of the lower left corner and the width and height of all three of the bounding boxes, so it has a length of 12.  The subject name, the image paths, the ground truth and rects are saved in a list. The images will then be retrieved and processed by batch in the __getitem__ method. Originally, the images were cropped here as well but this is already handled in the preprocessing. The training and testing hyperparameters are stored in a .yaml file, which we used to automate leave-one-out cross-validation by adding a leave-out parameter and checking for this in the for-subject loop in the loader.
 ### 2D to 3D conversion
