@@ -4,6 +4,21 @@ tries to reproduce both the results of _Appearance-based Gaze Estimation With De
 Learning: A Review and Benchmark_ and _Adaptive Feature Fusion Network for Gaze
 Tracking in Mobile Tablets_ and compare their results.
 
+Students: 
+- Arber Demi - a.demi@student.tudelft.nl
+- Akash Amalan - a.amalan@student.tudelft.nl
+- Emmy van der Ree - e.m.vander.ree@student.tudelft.nl
+
+Work distribution:
+
+Arber -> Training, Results and Discussion on blog, evaluation for 170 batch folds, initial processing/conversion work (mainly understanding, code not used).
+
+Emmy -> Adapted reader.py and convert_mpii_2To3.py, Methodology on blog, evaluation for 110 batch folds, leave-one-out scheduling.
+
+Akash -> Cluster setup (wasn't used however took a long time), training, Introduction on blog, edge case evaluation.
+
+Github: https://github.com/Em-R2019/DL-Reproducibility-Project
+
 ### Disclaimer
 At the outset, the intention was to reproduce the conclusions of the research paper accessible at https://arxiv.org/pdf/2104.12668.pdf and substantiate its outcomes with respect to Eye Diap. However, a hurdle was encountered upon requesting the dataset from the authors, as they failed to respond to the inquiry. Consequently, after a duration of two weeks, the decision was made to shift the focus towards replicating the results with a different dataset. Namely, MPIIFaceGaze.
 ## Introduction
@@ -156,6 +171,8 @@ However, when tested with a larger batch size of 210, the results were worse tha
 
 These results also show that even with our best scores throughout all epochs averaged, we are still off from the original score of 3.73 by a margin of 0.42, and compared to our overall average over the last epochs, we get a margin of 0.88.
 
+When compared to the original AFF-Net paper in terms of 2D gaze location error, we get a result of 4.8 cm for the 110 batch size models, and 4.73 cm for the 170 batch size models while the original paper has 3.8 cm.
+We obtained this result by reusing the pixel to mm conversion code found in the 2D to 3D conversion script.
 
 ## Discussion
 
