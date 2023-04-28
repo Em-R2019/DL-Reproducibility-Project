@@ -1,19 +1,43 @@
 # Reproduction Study
-This is a reproduction study of paper in Computer Vision And Machine Learning: 
-**_It’s Written All Over Your Face: Adaptive Feature Fusion Network for Gaze
-Tracking in Mobile Tablets_**
+This is a reproduction study of the application of AFF Net in Appearance-based Gaze Estimation on the dataset MPI-Face-gaze. This paper
+tries to reproduce both the results of _Appearance-based Gaze Estimation With Deep
+Learning: A Review and Benchmark_ and _Adaptive Feature Fusion Network for Gaze
+Tracking in Mobile Tablets_ and compare their results.
 
 ### Disclaimer
-At the outset, the intention was to reproduce the conclusions of the research paper accessible at https://arxiv.org/pdf/2104.12668.pdf and substantiate its outcomes with respect to Eye Diap. However, a hurdle was encountered upon requesting the dataset from the authors, as they failed to respond to the inquiry. Consequently, after a duration of two weeks, the decision was made to shift the focus towards replicating the results of an alternative research paper, entitled "It's Written All Over Your Face: Adaptive Feature Fusion Network for Gaze Tracking in Mobile Tablets."
+At the outset, the intention was to reproduce the conclusions of the research paper accessible at https://arxiv.org/pdf/2104.12668.pdf and substantiate its outcomes with respect to Eye Diap. However, a hurdle was encountered upon requesting the dataset from the authors, as they failed to respond to the inquiry. Consequently, after a duration of two weeks, the decision was made to shift the focus towards replicating the results with a different dataset. Namely, MPIIFaceGaze.
 ## Introduction
-In recent years, the field of gaze tracking has gained significant attention due to its potential for enhancing human-computer interaction and improving the safety of various applications.  _Bao et al._ proposed a novel approach for gaze tracking using an Adaptive Feature Fusion Network (AFF-Net) that leverages the similarity between eye structures and the face-eye relationship to enhance accuracy. AFF-Net employs Squeeze-and-Excitation layers to adaptively fuse two-eye features based on their similarity in appearance, along with Adaptive Group Normalization to recalibrate eye features with the guidance of facial features. By stacking and fusing two-eye feature maps, AFF-Net harnesses the complementary information provided by the identical structure of the two eyes, thereby improving gaze tracking accuracy.
+The potential of gaze tracking in enhancing human-computer interaction and improving the safety of various applications 
+has led to a significant interest in this field in recent years. To increase the accuracy of gaze tracking, researchers 
+proposed an innovative approach using an Adaptive Feature Fusion Network (AFF-Net) that exploits the similarity between 
+eye structures and the face-eye relationship. AFF-Net applies Squeeze-and-Excitation layers to merge two-eye features 
+based on their similarity in appearance, and Adaptive Group Normalization to recalibrate eye features by referencing 
+facial features. By stacking and fusing two-eye feature maps, AFF-Net integrates the complementary information provided
+by the identical structure of the two eyes, resulting in improved gaze tracking accuracy.
 
-The implications of AFF-Net are far-reaching, with potential applications in human attention diagnosis, human-computer interaction in mobile devices, and the development of safer driving systems and virtual reality applications. Moreover, the adaptive feature fusion and recalibration techniques employed in AFF-Net are generalizable to other multimodal learning tasks, where the fusion of different modalities can benefit from the utilization of their similarity and relationship.
+The potential applications of AFF-Net are vast, including human attention diagnosis, human-computer interaction in 
+mobile devices, and the development of safer driving systems and virtual reality applications. Furthermore, the 
+adaptive feature fusion and recalibration techniques employed in AFF-Net can be extended to other multimodal learning tasks, 
+where fusing different modalities based on their similarity and relationship can improve performance. 
 
-The results of the original paper showed that AFF-Net significantly outperforms the previous state-of-the-art method, achieving an average angular error of 5.53 degrees. The superior performance of AFF-Net is primarily attributed to its adaptive feature fusion and recalibration techniques, which effectively exploit the relationship between the two eyes and the face for better gaze tracking accuracy. This study is a critical attempt at reproducing their results on the MPIIFace-Gaze dataset. More specifically,
-this study aims to find the effect of scaling as done by the original paper on the actual result.
+AFF-Net has been evaluated on multiple datasets in previous studies, and this reproduction  study aims to reproduce the results of 
+Paper 1 and 2, as described below, on the MPI-FaceGaze dataset.
 
-### AFF-NET
+### Paper 1: Appearance-based Gaze Estimation With Deep Learning
+Paper 1 presents a comprehensive review and benchmark study of multiple deep learning models for gaze estimation, including classical CNN-based models, GazeNet, and AFFNET. The models are evaluated on seven publicly available datasets, and the results are presented in terms of 2D PoG estimation in centimeters and 3D gaze estimation in degrees. The study reports an error rate of 4.21 cm for 2D PoG and 3.73 degrees for 3D gaze for the MPI-FaceGaze dataset using AFF-Net.
+
+
+### Paper 2: Adaptive Feature Fusion Network for GazeTracking in Mobile Tablets
+IIn Paper 2, the authors propose AFF-NET  to enhance gaze tracking on mobile tablets 
+by merging features from various sources, such as RGB images, depth maps, and optical flow fields.
+ AFF-NET includes an adaptive feature fusion module that learns weights to balance the importance of different modalities for gaze estimation.
+The paper evaluates the efficacy of  AFF-NET on the MPI-FaceGaze dataset and compares it with various state-of-the-art gaze tracking methods.
+The results are reported as 2D PoG accuracy of 3.9 cm and 3D gaze error of 4.4 degrees for MPI-FaceGaze.
+
+_Both papers use a scale factor in their 2D to 3D conversion scripts, 
+and the influence of the scale factor on the results is unknown, which will be explored in this reproduction study._
+
+### AFF-NET 
 <p align="center">
 <img src='pics/AFF-NET.png' width='400'>
 <p >
@@ -38,6 +62,7 @@ The following scripts were given:
 - reader.py
 - test.py
 - train.py
+- Json label Files(without data)
 
 Although these scripts were available, they were primarily designed for the GazeCapture dataset, and therefore required modifications for the reproduction of the MPIFaceGaze Dataset. To achieve this, the MPI-preprocessing.py and reader.py scripts were modified to accommodate the MPI-FACE-Gaze format, while train.py was changed to use single GPUs over multiple cores in the data loader, as it was initially built for multi-GPU training. 
 The specifications of the two computers are:
