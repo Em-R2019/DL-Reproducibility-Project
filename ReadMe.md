@@ -1,8 +1,8 @@
 # Reproduction Study
-This is a reproduction study of the application of AFF Net in Appearance-based Gaze Estimation on the dataset MPI-Face-gaze. This paper
+This is a reproduction study of the application of AFF Net in Appearance-based Gaze Estimation on the dataset MPII-FaceGaze. This paper
 tries to reproduce both the results of _Appearance-based Gaze Estimation With Deep
 Learning: A Review and Benchmark_ and _Adaptive Feature Fusion Network for Gaze
-Tracking in Mobile Tablets_ and compare their results.
+Tracking in Mobile Tablets_ and compare their results to ours.
 
 Students: 
 - Arber Demi - a.demi@student.tudelft.nl
