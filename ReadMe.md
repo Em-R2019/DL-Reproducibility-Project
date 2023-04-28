@@ -20,11 +20,18 @@ mobile devices, and the development of safer driving systems and virtual reality
 adaptive feature fusion and recalibration techniques employed in AFF-Net can be extended to other multimodal learning tasks, 
 where fusing different modalities based on their similarity and relationship can improve performance. 
 
-AFF-Net has been evaluated on multiple datasets in previous studies, and this reproduction  study aims to reproduce the results of 
-Paper 1 and 2, as described below, on the MPI-FaceGaze dataset.
+Previous studies have evaluated AFF-Net on multiple datasets, but this study focuses specifically on two papers, 
+namely Papers 1 and 2, which were evaluated on the MPII-FaceGaze dataset. 
+</br>
+
+**Both papers utilized a scale factor in their 2D to 3D conversion scripts, and the impact of the scale factor on the results is unknown.
+This reproduction study aims to investigate the influence of the scale factor on the results.**
 
 ### Paper 1: Appearance-based Gaze Estimation With Deep Learning
-Paper 1 presents a comprehensive review and benchmark study of multiple deep learning models for gaze estimation, including classical CNN-based models, GazeNet, and AFFNET. The models are evaluated on seven publicly available datasets, and the results are presented in terms of 2D PoG estimation in centimeters and 3D gaze estimation in degrees. The study reports an error rate of 4.21 cm for 2D PoG and 3.73 degrees for 3D gaze for the MPI-FaceGaze dataset using AFF-Net.
+Paper 1 presents a comprehensive review and benchmark study of multiple deep learning models for gaze estimation,
+including classical CNN-based models, GazeNet, and AFFNET. The models are evaluated on seven publicly available datasets, 
+and the results are presented in terms of 2D PoG estimation in centimeters and 3D gaze estimation in degrees.
+The study reports an error rate of 4.21 cm for 2D PoG and 3.73 degrees for 3D gaze for the MPI-FaceGaze dataset using AFF-Net.
 
 
 ### Paper 2: Adaptive Feature Fusion Network for GazeTracking in Mobile Tablets
@@ -34,8 +41,8 @@ by merging features from various sources, such as RGB images, depth maps, and op
 The paper evaluates the efficacy of  AFF-NET on the MPI-FaceGaze dataset and compares it with various state-of-the-art gaze tracking methods.
 The results are reported as 2D PoG accuracy of 3.9 cm and 3D gaze error of 4.4 degrees for MPI-FaceGaze.
 
-_Both papers use a scale factor in their 2D to 3D conversion scripts, 
-and the influence of the scale factor on the results is unknown, which will be explored in this reproduction study._
+
+
 
 ### AFF-NET 
 <p align="center">
@@ -64,7 +71,13 @@ The following scripts were given:
 - train.py
 - Json label Files(without data)
 
-Although these scripts were available, they were primarily designed for the GazeCapture dataset, and therefore required modifications for the reproduction of the MPIFaceGaze Dataset. To achieve this, the MPI-preprocessing.py and reader.py scripts were modified to accommodate the MPI-FACE-Gaze format, while train.py was changed to use single GPUs over multiple cores in the data loader, as it was initially built for multi-GPU training. 
+Although these scripts were available, they were primarily designed for the GazeCapture dataset, and therefore required 
+modifications for the reproduction of the MPIFaceGaze Dataset. To achieve this, the MPI-preprocessing.py and reader.py 
+scripts were modified to accommodate the MPI-FACE-Gaze format, while train.py was changed to use single GPUs over 
+multiple cores in the data loader, as it was initially built for multi-GPU training. Do note that the Json label Files
+were used as inspiration to understand the format for MPI-preprocessing.py and reader.py.
+
+
 The specifications of the two computers are:
 -   **CPU :  i9-11900KF, Ryzen 5** 
 -   **GPU :  3050-TI, 3070-TI**
@@ -161,5 +174,7 @@ On top of that, the original paper doesn't include whether they set a specific s
 The original paper used multi-gpu parallelization during training. We changed the code to be run on a single-gpu and increased the worker threads. This method could cause some calculating errors to creep up due to the parameter usage from the threads.
 
 
-# Citation
+# Citations
+_Cheng, Yihua & Wang, Haofei & Bao, Yiwei & Lu, Feng. (2021). Appearance-based Gaze Estimation With Deep Learning: A Review and Benchmark._ 
+
 _Bao, Y., Cheng, Y., Liu, Y., & Lu, F. (2021). Adaptive Feature Fusion Network for Gaze Tracking in Mobile Tablets. In 2020 25th International Conference on Pattern Recognition (ICPR) (pp. 9936-9943). IEEE. doi: 10.1109/ICPR48806.2021.9412205*_
