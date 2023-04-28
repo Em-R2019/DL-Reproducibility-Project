@@ -110,19 +110,35 @@ The conversion script uses the rotation matrix `Rmat`, scale matrix `Smat` and `
 ## Results
 Results of our different training sessions are shown in the plots below, associated with a more concise table:
 
-                                                               For batch size 170
+
+<div style="text-align: center;"><b>For batch size 170</b></div>
+
+
+
+<p align="center">
+<img src='pics/scaled_average_170.jpeg' width='400'>
+<img src='pics/notscaled_average_170.jpeg' width='400'>
 <br /> <br />
-<img src='pics/scaled_average_170.jpeg' width='400'>----------------------------<img src='pics/notscaled_average_170.jpeg' width='400'>
-<br /> <br />
-<img src='pics/scaled_best_average_170.jpeg' width='400'>----------------------------<img src='pics/notscaled_best_average_170.jpeg' width='400'>
+
+
+<img src='pics/scaled_best_average_170.jpeg' width='400'>
+
+<img src='pics/notscaled_best_average_170.jpeg' width='400'>
 
 From the pictures above we can see that most of the later folds have quite an increase in degree of error. When these samples were left out during the leave-one-out cross-validation sequence, the models had a harder time correctly estimating gaze on, something that was also observed by the other group working on the same dataset.
 
-                                                                For batch size 110
+                                                               
+<div style="text-align: center;"><b>For batch size 110</b></div>
+<p align="center">
+<img src='pics/scaled_average_110.jpeg' width='400'>
+<img src='pics/notscaled_average_110.jpeg' width='400'>
 <br /> <br />
-<img src='pics/scaled_average_110.jpeg' width='400'>----------------------------<img src='pics/notscaled_average_110.jpeg' width='400'>
-<br /> <br />
-<img src='pics/scaled_best_average_110.jpeg' width='400'>----------------------------<img src='pics/notscaled_best_average_110.jpeg' width='400'>
+
+<p align="center">
+<img src='pics/scaled_best_average_110.jpeg' width='400'>
+
+
+<img src='pics/notscaled_best_average_110.jpeg' width='400'>
 
 Similarly to batch size 170 plots, the same samples seem to pose a problem for the trained models.
 
@@ -139,9 +155,6 @@ Table I shows that overall the larger batch size of 170 performed better than th
 However, when tested with a larger batch size of 210, the results were worse than both shown batch sizes. 
 
 These results also show that even with our best scores throughout all epochs averaged, we are still off from the original score of 3.73 by a margin of 0.42, and compared to our overall average over the last epochs, we get a margin of 0.88.
-
-## Analysis
-
 
 
 ## Discussion
