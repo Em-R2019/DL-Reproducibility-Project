@@ -1,16 +1,90 @@
 # Reproduction Study
-This is a reproduction study of paper in Computer Vision And Machine Learning:
-_**It’s Written All Over Your Face: Full-Face Appearance-Based Gaze Estimation**_
+This is a reproduction study of the application of AFF Net in Appearance-based Gaze Estimation on the dataset MPI-Face-gaze. This paper
+tries to reproduce both the results of _Appearance-based Gaze Estimation With Deep
+Learning: A Review and Benchmark_ and _Adaptive Feature Fusion Network for Gaze
+Tracking in Mobile Tablets_ and compare their results.
 
-
-
-
+### Disclaimer
+At the outset, the intention was to reproduce the conclusions of the research paper accessible at https://arxiv.org/pdf/2104.12668.pdf and substantiate its outcomes with respect to Eye Diap. However, a hurdle was encountered upon requesting the dataset from the authors, as they failed to respond to the inquiry. Consequently, after a duration of two weeks, the decision was made to shift the focus towards replicating the results with a different dataset. Namely, MPIIFaceGaze.
 ## Introduction
+The potential of gaze tracking in enhancing human-computer interaction and improving the safety of various applications 
+has led to a significant interest in this field in recent years. To increase the accuracy of gaze tracking, researchers 
+proposed an innovative approach using an Adaptive Feature Fusion Network (AFF-Net) that exploits the similarity between 
+eye structures and the face-eye relationship. AFF-Net applies Squeeze-and-Excitation layers to merge two-eye features 
+based on their similarity in appearance, and Adaptive Group Normalization to recalibrate eye features by referencing 
+facial features. By stacking and fusing two-eye feature maps, AFF-Net integrates the complementary information provided
+by the identical structure of the two eyes, resulting in improved gaze tracking accuracy.
+
+The potential applications of AFF-Net are vast, including human attention diagnosis, human-computer interaction in 
+mobile devices, and the development of safer driving systems and virtual reality applications. Furthermore, the 
+adaptive feature fusion and recalibration techniques employed in AFF-Net can be extended to other multimodal learning tasks, 
+where fusing different modalities based on their similarity and relationship can improve performance. 
+
+Previous studies have evaluated AFF-Net on multiple datasets, but this study focuses specifically on two papers, 
+namely Papers 1 and 2, which were evaluated on the MPII-FaceGaze dataset. 
+</br>
+
+**Both papers utilized a scale factor in their 2D to 3D conversion scripts, and the impact of the scale factor on the results is unknown.
+This reproduction study aims to investigate the influence of the scale factor on the results.**
+
+### Paper 1: Appearance-based Gaze Estimation With Deep Learning
+Paper 1 presents a comprehensive review and benchmark study of multiple deep learning models for gaze estimation,
+including classical CNN-based models, GazeNet, and AFFNET. The models are evaluated on seven publicly available datasets, 
+and the results are presented in terms of 2D PoG estimation in centimeters and 3D gaze estimation in degrees.
+The study reports an error rate of 4.21 cm for 2D PoG and 3.73 degrees for 3D gaze for the MPI-FaceGaze dataset using AFF-Net.
 
 
+### Paper 2: Adaptive Feature Fusion Network for GazeTracking in Mobile Tablets
+IIn Paper 2, the authors propose AFF-NET  to enhance gaze tracking on mobile tablets 
+by merging features from various sources, such as RGB images, depth maps, and optical flow fields.
+ AFF-NET includes an adaptive feature fusion module that learns weights to balance the importance of different modalities for gaze estimation.
+The paper evaluates the efficacy of  AFF-NET on the MPI-FaceGaze dataset and compares it with various state-of-the-art gaze tracking methods.
+The results are reported as 2D PoG accuracy of 3.9 cm and 3D gaze error of 4.4 degrees for MPI-FaceGaze.
+
+
+
+
+### AFF-NET 
+<p align="center">
+<img src='pics/AFF-NET.png' width='400'>
+<p >
+
+The AFF-Net is a neural network architecture that aims to improve eye tracking accuracy by utilizing the similarity of two eyes' appearances to adaptively fuse eye features and guide eye feature extraction with face appearance characteristics. One of the key components of the AFF-Net architecture is the eye feature fusion structure that contains eye feature stacking and Squeeze and Excitation (SE) layers for adaptive eye fusion. The SE layer is a powerful structure that applies attention to different eye features from different channels. It compresses every channel of the input feature to a single value using a Global Average Pooling (GAP) layer and then applies fully connected (FC) layers and a sigmoid function to calculate a weight vector that is used to derive the final result. The SE layer allocates attention to different channels according to cross-channel relationships, making it suitable for two-eye relationship-based eye feature fusion.
+
+The eye feature fusion structure in the AFF-Net architecture ensures that spatial and cross-channel information is not lost when reshaping feature maps to feature vectors and processing them with fully connected layers during eye feature fusion. Eye feature maps from different layers are stacked in channel wise, and SE layers are added before and after eye feature stacking to dynamically adjust channel-wise features, enhance the representational power of the network, and adaptively balance spatial information and complex features from left and right eyes according to their appearance and relationship. The SE layer plays a crucial role in the eye feature fusion process by allocating attention to different channels according to their cross-channel relationships.
+
+The shared weights CNN is another key component of the AFF-Net architecture used to ensure that the extraction of two eye features is identical. Shared weights CNN is used to process eye images, and the appearance of the two eyes is kept consistent by flipping right eye images horizontally during data processing. This ensures that the position of inner and outer eye corners and the direction of eyebrows are consistent in left and right eye images, making it easier for the shared weights Eye Net to extract eye features like iris for different appearances.
+
+Finally, to fuse facial features for better gaze estimation, the AFF-Net architecture proposes Adaptive Group Normalization (AdaGN), which adequately utilizes facial feature guidance. AdaGN takes concatenated Rects features and facial features as input to represent face appearance characteristics and adaptively adjusts eye feature extraction according to those characteristics by recalibrating eye features. According to different combinations of head pose, light condition, and other factors reflected in facial appearance characteristics, AdaGN calculates scale and shift parameters to enhance the representational power of normalized features.
+
+In summary, the AFF-Net architecture utilizes attention layers, such as the SE layer, to dynamically adjust channel-wise features and allocate attention to different eye features according to cross-channel relationships during eye feature fusion. Additionally, the shared weights CNN is used to ensure identical extraction of two eye features, while AdaGN adapts eye feature extraction according to facial appearance characteristics. These components work together to enhance the accuracy of eye tracking by adaptively fusing eye features and guiding eye feature extraction with face appearance characteristics.
 
 ## Approach
+In order to reproduce the findings of the paper on MPII-FACE-GAZE, the authors provided the preprocessing code and 2D to 3D conversion codes, which were made available at https://phi-ai.buaa.edu.cn/Gazehub/. However, the actual model, as well as the training and test codes, were not provided, prompting us to utilize the codes and model provided in the Github repository at https://github.com/kirito12138/AFF-Net. The author of the repository cited the original paper but acknowledged that the data loader codes were not universal with the original paper.
+The following scripts were given: 
 
+- data_processing_core.py
+- data_processing_mpii.py
+- train.py
+- reader.py
+- test.py
+- train.py
+- Json label Files(without data)
+
+Although these scripts were available, they were primarily designed for the GazeCapture dataset, and therefore required 
+modifications for the reproduction of the MPIFaceGaze Dataset. To achieve this, the MPI-preprocessing.py and reader.py 
+scripts were modified to accommodate the MPI-FACE-Gaze format, while train.py was changed to use single GPUs over 
+multiple cores in the data loader, as it was initially built for multi-GPU training. Do note that the Json label Files
+were used as inspiration to understand the format for MPI-preprocessing.py and reader.py.
+
+
+The specifications of the two computers are:
+-   **CPU :  i9-11900KF, Ryzen 5** 
+-   **GPU :  3050-TI, 3070-TI**
+
+Notably, the original batch size used in the paper was 250, but both GPUs were unable to process this batch size. As a result, Computer 1 was trained on 110 while Computer 2 was trained on 170. The results from both computers were then aggregated for the final analysis, which is presented in the later section of this readme. It is important to note that a leave-one-out approach was used for training, consistent with the original paper, in an effort to reproduce the actual result.
+The original paper also employed a scale factor for the conversion of 2D to 3D, as explained in the methodology section. To investigate the influence of this scale factor, we obtained results for both scaled and non-scaled conversion scripts. 
+The resulting degrees are summarized in the result section.
 
 
 ## Methodology
@@ -98,3 +172,9 @@ On top of that, the original paper doesn't include whether they set a specific s
 ### Changed training procedure
 
 The original paper used multi-gpu parallelization during training. We changed the code to be run on a single-gpu and increased the worker threads. This method could cause some calculating errors to creep up due to the parameter usage from the threads.
+
+
+# Citations
+_Cheng, Yihua & Wang, Haofei & Bao, Yiwei & Lu, Feng. (2021). Appearance-based Gaze Estimation With Deep Learning: A Review and Benchmark._ 
+
+_Bao, Y., Cheng, Y., Liu, Y., & Lu, F. (2021). Adaptive Feature Fusion Network for Gaze Tracking in Mobile Tablets. In 2020 25th International Conference on Pattern Recognition (ICPR) (pp. 9936-9943). IEEE. doi: 10.1109/ICPR48806.2021.9412205*_
