@@ -1,6 +1,5 @@
 import gc
 from datetime import datetime
-
 import model
 import reader
 import torch
@@ -53,8 +52,6 @@ if __name__ == "__main__":
                 cur_decay_index = cur_decay_index + 1
                 for param_group in optimizer.param_groups:
                     param_group["lr"] = base_lr
-            # if (epoch <= 10):
-            #    continue
 
             time_begin = time.time()
             current_time = datetime.now()
@@ -69,7 +66,6 @@ if __name__ == "__main__":
                 # print(data["face"].shape)
                 # print(data["left"].shape)
                 # print(data['head_pose'].shape)
-                # gc.collect()
                 torch.cuda.empty_cache()
                 gaze = net(data["leftEyeImg"], data["rightEyeImg"], data['faceImg'], data['rects'])
                 loss = loss_op(gaze, label) * 4

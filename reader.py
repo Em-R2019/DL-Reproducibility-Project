@@ -3,44 +3,8 @@ import cv2
 import os
 from torch.utils.data import Dataset, DataLoader
 import torch
-import json
-import random
-import copy
 
 from tqdm import tqdm
-
-
-# randomly move the bounding box around
-def aug_line(line, width, height):
-    bbox = np.array(line[2:5])
-    bias = round(30 * random.uniform(-1, 1))
-    bias = max(np.max(-bbox[0, [0, 2]]), bias)
-    bias = max(np.max(-2 * bbox[1:, [0, 2]] + 0.5), bias)
-
-    line[2][0] += int(round(bias))
-    line[2][1] += int(round(bias))
-    line[2][2] += int(round(bias))
-    line[2][3] += int(round(bias))
-
-    line[3][0] += int(round(0.5 * bias))
-    line[3][1] += int(round(0.5 * bias))
-    line[3][2] += int(round(0.5 * bias))
-    line[3][3] += int(round(0.5 * bias))
-
-    line[4][0] += int(round(0.5 * bias))
-    line[4][1] += int(round(0.5 * bias))
-    line[4][2] += int(round(0.5 * bias))
-    line[4][3] += int(round(0.5 * bias))
-
-    line[5][2] = line[2][2] / width
-    line[5][3] = line[2][0] / height
-
-    line[5][6] = line[3][2] / width
-    line[5][7] = line[3][0] / height
-
-    line[5][10] = line[4][2] / width
-    line[5][11] = line[4][0] / height
-    return line
 
 
 class loader(Dataset):
@@ -61,12 +25,16 @@ class loader(Dataset):
                 continue
             with open(os.path.join(label_path, subject), "r") as file:
                 for line in file:
+                    #   0        1       2        3        4        5        6       7       8        9       10         11             12
+                    # faceImg leftImg rightImg gridImg originImg whicheye 2DPoint Headrot HeadTrans ratio FaceCorner LeftEyeCorner RightEyeCorner
+                    #
+
                     labels = line.strip().split(' ')
-                    if labels[0] == "Face":
+                    if labels[0] == "Face":  # skip first line
                         continue
 
                     labels = [i.split(',') for i in labels]
-                    # labels = np.array(labels)
+
                     faceCorner = [float(l) for l in labels[10]]
                     faceWidth = faceCorner[2] - faceCorner[0]
                     faceHeight = faceCorner[3] - faceCorner[1]
@@ -80,13 +48,13 @@ class loader(Dataset):
                     rightEyeHeight = rightEyeCorner[3] - rightEyeCorner[1]
 
                     label = [float(l) for l in line.strip().split(' ')[6].split(",")]
-                    # label = np.array(label).astype('float')
 
+                    # bbox: x, y of upper left corner, width, height
+                    # rects: [rightEye, face, leftEye]
                     rects = [rightEyeCorner[0], rightEyeCorner[1], rightEyeWidth, rightEyeHeight, faceCorner[0],
                              faceCorner[1], faceWidth, faceHeight, leftEyeCorner[0], leftEyeCorner[1], leftEyeWidth,
                              leftEyeHeight]
-                    temp = [labels[0][0].split("\\")[0], labels[0][0], faceCorner, leftEyeCorner, rightEyeCorner, rects,
-                            label, labels[1][0], labels[2][0]]
+                    temp = [labels[0][0].split("\\")[0], labels[0][0], rects, label, labels[1][0], labels[2][0]]
                     self.lines.append(temp)
 
 
@@ -94,16 +62,16 @@ class loader(Dataset):
         return len(self.lines)
 
     def __getitem__(self, idx):
-        #   0        1     2     3     4     5     6
-        # subject, name, face, left, right, rect, 8pts
+        #   0        1         2      3       4         5
+        # subject, facePath, rects, label, leftPath, rightPath
         #
         line = self.lines[idx]
 
         Image_path = os.path.join(self.data_path, 'Image')
 
         face_img = cv2.imread(os.path.join(Image_path, line[1]))
-        leftEye_img = cv2.imread(os.path.join(Image_path, line[7]))
-        rightEye_img = cv2.imread(os.path.join(Image_path, line[8]))
+        leftEye_img = cv2.imread(os.path.join(Image_path, line[4]))
+        rightEye_img = cv2.imread(os.path.join(Image_path, line[5]))
 
         face_img = cv2.resize(face_img, (224, 224))
         face_img = cv2.cvtColor(face_img, cv2.COLOR_BGR2RGB)
@@ -121,13 +89,13 @@ class loader(Dataset):
         rightEye_img = rightEye_img / 255
         rightEye_img = rightEye_img.transpose(2, 0, 1)
 
-        label = line[6]
+        label = line[3]
         label = np.array(label).astype(float)
 
         return {"faceImg": torch.from_numpy(face_img).type(torch.FloatTensor),
                 "leftEyeImg": torch.from_numpy(leftEye_img).type(torch.FloatTensor),
                 "rightEyeImg": torch.from_numpy(rightEye_img).type(torch.FloatTensor),
-                "rects": torch.from_numpy(np.array(line[5])).type(torch.FloatTensor),
+                "rects": torch.from_numpy(np.array(line[2])).type(torch.FloatTensor),
                 "label": torch.from_numpy(label).type(torch.FloatTensor),
                 "frame": line}
 
