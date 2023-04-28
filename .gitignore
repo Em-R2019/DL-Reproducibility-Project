@@ -1,0 +1,16 @@
+/.idea/
+/checkpoint/
+/data/
+/label/
+/model/
+model 05042023
+output2D
+Test
+original
+MPIIFaceGaze
+MPIIFaceGaze3D
+MPIIFaceGaze
+checkpoint
+data
+label
+MPIIGaze

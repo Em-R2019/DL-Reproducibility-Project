@@ -1,3 +1,4 @@
+import math
 import numpy as np
 import cv2
 # import im_plot as ipt
@@ -204,5 +205,10 @@ def Euler2RotMat(theta, format='degree'):
                     ])
     R = np.dot(R_z, np.dot(R_y, R_x))
     return R
+
+def AngularLoss(v1, v2):
+    """ Returns the angle in degrees between vectors 'v1' and 'v2'::
+    """
+    return math.degrees(np.arccos(np.clip(np.dot(v1, v2), -1.0, 1.0)))
 
 
