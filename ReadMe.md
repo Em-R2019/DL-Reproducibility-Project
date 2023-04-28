@@ -111,35 +111,33 @@ The conversion script uses the rotation matrix `Rmat`, scale matrix `Smat` and `
 Results of our different training sessions are shown in the plots below, associated with a more concise table:
 
 
-<center><b>For batch size 170</b></center>
+<div style="text-align: center;"><b>For batch size 170</b></div>
 
 
 
 <p align="center">
 <img src='pics/scaled_average_170.jpeg' width='400'>
-<p align="center">
-
 <img src='pics/notscaled_average_170.jpeg' width='400'>
 <br /> <br />
 
 
 <img src='pics/scaled_best_average_170.jpeg' width='400'>
-<br /> <br />
+
 <img src='pics/notscaled_best_average_170.jpeg' width='400'>
 
 From the pictures above we can see that most of the later folds have quite an increase in degree of error. When these samples were left out during the leave-one-out cross-validation sequence, the models had a harder time correctly estimating gaze on, something that was also observed by the other group working on the same dataset.
 
                                                                
-<center><b>For batch size 110</b></center>
+<div style="text-align: center;"><b>For batch size 110</b></div>
 <p align="center">
 <img src='pics/scaled_average_110.jpeg' width='400'>
-<br /> <br />
 <img src='pics/notscaled_average_110.jpeg' width='400'>
-
 <br /> <br />
+
 <p align="center">
 <img src='pics/scaled_best_average_110.jpeg' width='400'>
-<br /> <br />
+
+
 <img src='pics/notscaled_best_average_110.jpeg' width='400'>
 
 Similarly to batch size 170 plots, the same samples seem to pose a problem for the trained models.
